@@ -1,214 +1,142 @@
-## Custom exception traceback  
+# Custom exception and warning formatter [![PyPI](https://img.shields.io/pypi/v/mwk-traceback)](https://pypi.org/project/mwk-traceback/) 
 
 ---
 
-```text
-
-
-NAME
-    custom_exception_traceback
-PACKAGE CONTENTS
-    custom_exc_tb
-    custom_warn
-CLASSES
-    builtins.object
-        custom_exception_traceback.custom_exc_tb.CustomTraceback
-            SuperCompactTraceback
-        custom_exception_traceback.custom_warn.CustomWarningFormatter
-            SuperCompactWarningFormatter
-    
-    class CustomTraceback(builtins.object)
-     |  CustomTraceback(exc: BaseException, *, chain: bool = True, reverse: bool = False) -> str
-     |  
-     |  Helper class for exceptions traceback handling. Doesn't create any instances of itself!!!
-     |  
-     |  General info:
-     |  It goes down exceptions chain and gets traceback for each exception than format string with that.
-     |  
-     |  Usage:
-     |  CustomTraceback(exc) -> get exception formatted string
-     |  CustomTraceback.print_exception(exc) -> print formatted exception
-     |  CustomTraceback.exception_hook -> to be used with sys.excepthook
-     |  
-     |  Class methods defined here:
-     |  
-     |  exception_hook(exc_type: type, exc_value: BaseException, trace_back: traceback) -> None from builtins.type
-     |      Method to be used as system exception hook: 'sys.excepthook = CustomTraceback.exception_hook'
-     |      :param exc_type: sys.excepthook signature
-     |      :param exc_value: sys.excepthook signature
-     |      :param trace_back: sys.excepthook signature
-     |      :return: None
-     |  
-     |  print_exception(exc: BaseException, *, chain: bool = True, reverse: False = False, file: <class 'TextIO'> = <_io.TextIOWrapper name='<stderr>' mode='w' encoding='utf-8'>) -> None from builtins.type
-     |      Just print formatted exception to the given io object (stdout, stderr, ...)
-     |      :param exc: exception
-     |      :param chain: chain exceptions or not
-     |      :param reverse: reverse order of exceptions
-     |      :param file: io object file
-     |      :return: None
-     |  
-     |  ----------------------------------------------------------------------
-     |  Static methods defined here:
-     |  
-     |  __new__(cls, exc: BaseException, *, chain: bool = True, reverse: bool = False) -> str
-     |      Doesn't create instances. Returns formatted exception string.
-     |      :param exc: exception
-     |      :param chain: chain exceptions or not
-     |      :param reverse: reverse order of exceptions
-     |      :return: formatted exception string
-    
-    class CustomWarningFormatter(builtins.object)
-     |  CustomWarningFormatter(message, category, filename, lineno, line=None)
-     |  
-     |  Static methods defined here:
-     |  
-     |  __new__(cls, message, category, filename, lineno, line=None)
-     |      Create and return a new object.  See help(type) for accurate signature.
-     |  
-     |  ----------------------------------------------------------------------
-     |  Data descriptors defined here:
-     |  
-     |  __dict__
-     |      dictionary for instance variables (if defined)
-     |  
-     |  __weakref__
-     |      list of weak references to the object (if defined)
-    
-    compact_tb = class CustomTraceback(builtins.object)
-     |  compact_tb(exc: BaseException, *, chain: bool = True, reverse: bool = False) -> str
-     |  
-     |  Helper class for exceptions traceback handling. Doesn't create any instances of itself!!!
-     |  
-     |  General info:
-     |  It goes down exceptions chain and gets traceback for each exception than format string with that.
-     |  
-     |  Usage:
-     |  CustomTraceback(exc) -> get exception formatted string
-     |  CustomTraceback.print_exception(exc) -> print formatted exception
-     |  CustomTraceback.exception_hook -> to be used with sys.excepthook
-     |  
-     |  Class methods defined here:
-     |  
-     |  exception_hook(exc_type: type, exc_value: BaseException, trace_back: traceback) -> None from builtins.type
-     |      Method to be used as system exception hook: 'sys.excepthook = CustomTraceback.exception_hook'
-     |      :param exc_type: sys.excepthook signature
-     |      :param exc_value: sys.excepthook signature
-     |      :param trace_back: sys.excepthook signature
-     |      :return: None
-     |  
-     |  print_exception(exc: BaseException, *, chain: bool = True, reverse: False = False, file: <class 'TextIO'> = <_io.TextIOWrapper name='<stderr>' mode='w' encoding='utf-8'>) -> None from builtins.type
-     |      Just print formatted exception to the given io object (stdout, stderr, ...)
-     |      :param exc: exception
-     |      :param chain: chain exceptions or not
-     |      :param reverse: reverse order of exceptions
-     |      :param file: io object file
-     |      :return: None
-     |  
-     |  ----------------------------------------------------------------------
-     |  Static methods defined here:
-     |  
-     |  __new__(cls, exc: BaseException, *, chain: bool = True, reverse: bool = False) -> str
-     |      Doesn't create instances. Returns formatted exception string.
-     |      :param exc: exception
-     |      :param chain: chain exceptions or not
-     |      :param reverse: reverse order of exceptions
-     |      :return: formatted exception string
-    
-    compact_warn = class CustomWarningFormatter(builtins.object)
-     |  compact_warn(message, category, filename, lineno, line=None)
-     |  
-     |  Static methods defined here:
-     |  
-     |  __new__(cls, message, category, filename, lineno, line=None)
-     |      Create and return a new object.  See help(type) for accurate signature.
-     |  
-     |  ----------------------------------------------------------------------
-     |  Data descriptors defined here:
-     |  
-     |  __dict__
-     |      dictionary for instance variables (if defined)
-     |  
-     |  __weakref__
-     |      list of weak references to the object (if defined)
-    
-    super_compact_tb = class SuperCompactTraceback(custom_exception_traceback.custom_exc_tb.CustomTraceback)
-     |  super_compact_tb(exc: BaseException, *, chain: bool = True, reverse: bool = False) -> str
-     |  
-     |  Helper class for exceptions traceback handling. Doesn't create any instances of itself!!!
-     |  
-     |  General info:
-     |  It goes down exceptions chain and gets traceback for each exception than format string with that.
-     |  
-     |  Usage:
-     |  CustomTraceback(exc) -> get exception formatted string
-     |  CustomTraceback.print_exception(exc) -> print formatted exception
-     |  CustomTraceback.exception_hook -> to be used with sys.excepthook
-     |  
-     |  Method resolution order:
-     |      SuperCompactTraceback
-     |      custom_exception_traceback.custom_exc_tb.CustomTraceback
-     |      builtins.object
-     |  
-     |  Data descriptors defined here:
-     |  
-     |  __dict__
-     |      dictionary for instance variables (if defined)
-     |  
-     |  __weakref__
-     |      list of weak references to the object (if defined)
-     |  
-     |  ----------------------------------------------------------------------
-     |  Class methods inherited from custom_exception_traceback.custom_exc_tb.CustomTraceback:
-     |  
-     |  exception_hook(exc_type: type, exc_value: BaseException, trace_back: traceback) -> None from builtins.type
-     |      Method to be used as system exception hook: 'sys.excepthook = CustomTraceback.exception_hook'
-     |      :param exc_type: sys.excepthook signature
-     |      :param exc_value: sys.excepthook signature
-     |      :param trace_back: sys.excepthook signature
-     |      :return: None
-     |  
-     |  print_exception(exc: BaseException, *, chain: bool = True, reverse: False = False, file: <class 'TextIO'> = <_io.TextIOWrapper name='<stderr>' mode='w' encoding='utf-8'>) -> None from builtins.type
-     |      Just print formatted exception to the given io object (stdout, stderr, ...)
-     |      :param exc: exception
-     |      :param chain: chain exceptions or not
-     |      :param reverse: reverse order of exceptions
-     |      :param file: io object file
-     |      :return: None
-     |  
-     |  ----------------------------------------------------------------------
-     |  Static methods inherited from custom_exception_traceback.custom_exc_tb.CustomTraceback:
-     |  
-     |  __new__(cls, exc: BaseException, *, chain: bool = True, reverse: bool = False) -> str
-     |      Doesn't create instances. Returns formatted exception string.
-     |      :param exc: exception
-     |      :param chain: chain exceptions or not
-     |      :param reverse: reverse order of exceptions
-     |      :return: formatted exception string
-    
-    super_compact_warn = class SuperCompactWarningFormatter(custom_exception_traceback.custom_warn.CustomWarningFormatter)
-     |  super_compact_warn(message, category, filename, lineno, line=None)
-     |  
-     |  Method resolution order:
-     |      SuperCompactWarningFormatter
-     |      custom_exception_traceback.custom_warn.CustomWarningFormatter
-     |      builtins.object
-     |  
-     |  Static methods inherited from custom_exception_traceback.custom_warn.CustomWarningFormatter:
-     |  
-     |  __new__(cls, message, category, filename, lineno, line=None)
-     |      Create and return a new object.  See help(type) for accurate signature.
-     |  
-     |  ----------------------------------------------------------------------
-     |  Data descriptors inherited from custom_exception_traceback.custom_warn.CustomWarningFormatter:
-     |  
-     |  __dict__
-     |      dictionary for instance variables (if defined)
-     |  
-     |  __weakref__
-     |      list of weak references to the object (if defined)
-DATA
-    __all__ = ('compact_tb', 'super_compact_tb', 'compact_warn', 'super_co...
-FILE
-    c:\home\python\projects\custom_exception_traceback\src\custom_exception_traceback\__init__.py
-
+## Exceptions
+### Define exception format by subclassing **CustomTraceback**
+```python
+class MyTracebackFormatter(CustomTraceback):
+    _EXC_FORMAT = '| {traceback}>> {type}: {exception}.\n'
+    _TB_FORMAT = '[{file}::{func}]@{line} "{code}" | '
+    _EXC_HOOK_HEAD_TEXT = 'Error:'
 ```
+*1. **_EXC_FORMAT** used for formatting single exception in exceptions chain:*  
+**_EXC_FORMAT** should be *python formatted string literal* with values in **{}** brackets.
+Available values for **_EXC_FORMAT** *formatted string literal*:
+- **traceback**: formatted traceback goes here (see below)
+- **type**: exception class name
+- **exception**: exception message  
+
+*2. **_TB_FORMAT** used for formatting single traceback frame in traceback chain:*  
+**_TB_FORMAT** should be *python formatted string literal* with values in **{}** brackets.
+Available values for **_TB_FORMAT** *formatted string literal*:
+- **file**: python .py file stem where error occurred
+- **func**: function or module where error occurred
+- **line**: number of the line of code where error occurred  
+- **code**: line of code itself
+
+*3. **_EXC_HOOK_HEAD_TEXT** used as header for exceptions*  
+**_EXC_HOOK_HEAD_TEXT** should be python string
+
+*4. Additional variables to define:*
+- **_EXC_OUT**: output for exceptions, **sys.stderr**  by default
+- **_EXC_CHAIN**: **True** - chain exceptions, **False** - only last exception, by default **True**
+- **_EXC_REVERSE**: order of chained exceptions, **True** - show like default python exception hook, by default **False**
+### Usage:
+1. Definition
+```python
+class MyTracebackFormatter(CustomTraceback):
+    _TB_FORMAT = '[{file}::{func}]@{line} "{code}" | '
+    _EXC_FORMAT = '| {traceback}>> {type}: {exception}.\n'
+    _EXC_HOOK_HEAD_TEXT = 'Error:'
+    _EXC_OUT = sys.stderr
+    _EXC_CHAIN = True
+    _EXC_REVERSE = False
+```
+2. Get formatted exception string
+```python
+exc_str = MyTracebackFormatter(exc)
+```
+3. Print formatted exception
+```python
+MyTracebackFormatter.print_exception(exc)
+```
+4. Use with **sys.excepthook**
+```python
+import sys
+sys.excepthook = MyTracebackFormatter.exception_hook
+```
+### Predefined traceback formatters
+1. **compact_tb**
+```python
+from mwk_traceback import compact_tb
+import sys
+sys.excepthook = compact_tb.exception_hook
+
+main()  # ! check test dir for code !
+```
+Output:
+```commandline
+Error(s):
+| Error in [test_exc_tb.py] in [<module>] at line (39) while executing "main()"
+| Error in [test_exc_tb.py] in [main] at line (27) while executing "func()"
+| Error in [test_exc_tb.py] in [func] at line (22) while executing "raise"
+   >> NameError: error in func.
+| Error in [test_exc_tb.py] in [func] at line (20) while executing "func_func()"
+| Error in [test_exc_tb.py] in [func_func] at line (15) while executing "raise"
+   >> AttributeError: error in func_func.
+| Error in [test_exc_tb.py] in [func_func] at line (13) while executing "func_func_func()"
+| Error in [test_exc_tb.py] in [func_func_func] at line (8) while executing "x = 1 / 0"
+   >> ZeroDivisionError: division by zero.
+```
+2. **super_compact_tb**
+```python
+from mwk_traceback import super_compact_tb
+import sys
+sys.excepthook = super_compact_tb.exception_hook
+
+main()  # ! check test dir for code !
+```
+Output:
+```commandline
+Error:
+| [test_exc_tb::<module>]@42 "main()" | [test_exc_tb::main]@27 "func()" | [test_exc_tb::func]@22 "raise" | >> NameError: error in func.
+| [test_exc_tb::func]@20 "func_func()" | [test_exc_tb::func_func]@15 "raise" | >> AttributeError: error in func_func.
+| [test_exc_tb::func_func]@13 "func_func_func()" | [test_exc_tb::func_func_func]@8 "x = 1 / 0" | >> ZeroDivisionError: division by zero.
+```
+## Warnings
+### Define warning format by subclassing **CustomWarningFormatter**:
+```python
+class MyWarningFormatter(CustomWarningFormatter):
+    _WARN_FORMAT = '[{file}]@{line} >> {type}: {message}\n'
+```
+**_WARN_FORMAT** should be *python formatted string literal* with values in **{}** brackets.  
+Available values for **_WARN_FORMAT** *formatted string literal*:
+- **message**: warning message
+- **type**: warning class name
+- **file**: python .py file stem where warning occurred
+- **line**: number of the line of code where warning occurred
+### Usage:
+```python
+import warnings
+warnings.formatwarning = MyWarningFormatter
+
+warnings.warn('This is warning', UserWarning)
+```
+### Predefined warning formatters (classes)
+1. **compact_warn**
+```python
+import warnings
+from mwk_traceback import compact_warn
+warnings.formatwarning = compact_warn
+
+warnings.warn('This is warning', DeprecationWarning)
+```
+Output:
+```commandline
+Warning in [test_warn.py] at line (6)
+   >> DeprecationWarning: This is warning
+```
+2. **super_compact_warn**
+```python
+import warnings
+from mwk_traceback import super_compact_warn
+warnings.formatwarning = super_compact_warn
+
+warnings.warn('This is another warning', UserWarning)
+```
+Output:
+```commandline
+[test_warn]@10 >> UserWarning: This is another warning
+```
+
