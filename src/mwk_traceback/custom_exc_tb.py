@@ -1,7 +1,7 @@
 import sys
 from pathlib import Path
 from linecache import getline
-from typing import Dict, Generator, TextIO
+from typing import Dict, Generator, TextIO, Optional, Union
 from types import TracebackType
 
 ExceptionType = type
@@ -54,6 +54,7 @@ class CustomTraceback:
         while True:
             yield exc
             exc = exc.__context__
+            # exc = getattr(exc, '__context__', None)
             if not exc:
                 break
 
@@ -101,7 +102,7 @@ class CustomTraceback:
             if reverse:
                 chain_tuple = reversed(chain_tuple)
         else:
-            chain_tuple = (exc, )
+            chain_tuple = (exc,)
 
         exc_str = ''.join(
             (cls._EXC_FORMAT.format(exception=e,
@@ -122,6 +123,34 @@ class CustomTraceback:
         :return: None
         """
         print(cls._format_exception(exc, chain=chain, reverse=reverse), file=file)
+
+    @classmethod
+    def traceback_print_exception_hook(cls,
+                                       exc: Union[ExceptionType, BaseException, None], /,
+                                       value: Optional[BaseException], tb='', limit=None,
+                                       file: TextIO = _EXC_OUT,
+                                       chain: bool = _EXC_CHAIN) -> None:
+        """
+        Some modules and apps (logging for example) are using traceback.print_exception to show exception traceback.
+        This method is to be used as traceback module print_exception method hook:
+            'traceback.print_exception = CustomTraceback.traceback_print_exception_hook'
+        :param exc: exception type
+        :param value: exception
+        :param tb: traceback - not used in this implementation
+        :param limit: not used - not used in this implementation
+        :param chain: chain exceptions or not
+        :param file: io object file
+        :return: None
+        """
+        # :todo: traceback.format_exc also???
+        if isinstance(value, BaseException):
+            print(cls._format_exception(value, chain=chain, reverse=cls._EXC_REVERSE), file=file)
+        else:
+            if isinstance(exc, BaseException):
+                print(cls._format_exception(exc, chain=chain, reverse=cls._EXC_REVERSE), file=file)
+            else:
+                print('No exception is being handled.\n', file=file)
+
 
     @classmethod
     def exception_hook(cls,
