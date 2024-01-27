@@ -51,48 +51,70 @@ exc_str = MyTracebackFormatter(exc)
 ```python
 MyTracebackFormatter.print_exception(exc)
 ```
-4. Use with **sys.excepthook**
+4. Use **actvate()** method to alter way of presenting tracebacks for system, modules(i.e. logging) and apps:
 ```python
-import sys
+MyTracebackFormatter.activate()
+```
+It is equivalent of executing these statements:
+```python
 sys.excepthook = MyTracebackFormatter.exception_hook
+traceback.print_exception = MyTracebackFormatter.traceback_print_exception_hook
+traceback.format_exception = MyTracebackFormatter.traceback_format_exception_hook
 ```
 ### Predefined traceback formatters
 1. **compact_tb**
 ```python
 from mwk_traceback import compact_tb
-import sys
-sys.excepthook = compact_tb.exception_hook
 
-main()  # ! check test dir for code !
+compact_tb.activate()
+
+main()  # ! check test_main.py for code !
+test_tb_pr_exc()  # ! check test_traceback_print_exception.py for code !
 ```
 Output:
 ```commandline
-Error(s):
-| Error in [test_exc_tb.py] in [<module>] at line (39) while executing "main()"
-| Error in [test_exc_tb.py] in [main] at line (27) while executing "func()"
-| Error in [test_exc_tb.py] in [func] at line (22) while executing "raise"
+! Error(s):
+| Error in [test_main.py] in [<module>] at line (27) while executing "main()"
+| Error in [test_main.py] in [main] at line (22) while executing "func()"
+| Error in [test_main.py] in [func] at line (17) while executing "raise"
    >> NameError: error in func.
-| Error in [test_exc_tb.py] in [func] at line (20) while executing "func_func()"
-| Error in [test_exc_tb.py] in [func_func] at line (15) while executing "raise"
+| Error in [test_main.py] in [func] at line (15) while executing "func_func()"
+| Error in [test_main.py] in [func_func] at line (10) while executing "raise"
    >> AttributeError: error in func_func.
-| Error in [test_exc_tb.py] in [func_func] at line (13) while executing "func_func_func()"
-| Error in [test_exc_tb.py] in [func_func_func] at line (8) while executing "x = 1 / 0"
+| Error in [test_main.py] in [func_func] at line (8) while executing "func_func_func()"
+| Error in [test_main.py] in [func_func_func] at line (3) while executing "x = 1 / 0"
    >> ZeroDivisionError: division by zero.
+ ----------------------------------------------------------------------------------------------------------  
+ERROR:root:logging error
+ERROR:root:logging exception
+| Error in [test_traceback_print_exception.py] in [test_tb_pr_exc] at line (13) while executing "x = 1 / 0"
+   >> ZeroDivisionError: division by zero.
+
+ERROR:root:There was no exception
+No exception is being handled.
 ```
 2. **super_compact_tb**
 ```python
 from mwk_traceback import super_compact_tb
-import sys
-sys.excepthook = super_compact_tb.exception_hook
 
-main()  # ! check test dir for code !
+super_compact_tb.activate()
+
+main()  # ! check test_main.py for code !
+test_tb_pr_exc()  # ! check test_traceback_print_exception.py for code !
 ```
 Output:
 ```commandline
-Error:
-| [test_exc_tb::<module>]@42 "main()" | [test_exc_tb::main]@27 "func()" | [test_exc_tb::func]@22 "raise" | >> NameError: error in func.
-| [test_exc_tb::func]@20 "func_func()" | [test_exc_tb::func_func]@15 "raise" | >> AttributeError: error in func_func.
-| [test_exc_tb::func_func]@13 "func_func_func()" | [test_exc_tb::func_func_func]@8 "x = 1 / 0" | >> ZeroDivisionError: division by zero.
+! Error:
+| [test_main::<module>]@31 "main()" | [test_main::main]@22 "func()" | [test_main::func]@17 "raise" | >> NameError: error in func.
+| [test_main::func]@15 "func_func()" | [test_main::func_func]@10 "raise" | >> AttributeError: error in func_func.
+| [test_main::func_func]@8 "func_func_func()" | [test_main::func_func_func]@3 "x = 1 / 0" | >> ZeroDivisionError: division by zero.
+ ----------------------------------------------------------------------------------------------------------
+ERROR:root:logging error
+ERROR:root:logging exception
+| [test_traceback_print_exception::test_tb_pr_exc]@14 "x = 1 / 0" | >> ZeroDivisionError: division by zero.
+
+ERROR:root:There was no exception
+No exception is being handled
 ```
 ## Warnings
 ### Define warning format by subclassing **CustomWarningFormatter**:
@@ -120,12 +142,12 @@ import warnings
 from mwk_traceback import compact_warn
 warnings.formatwarning = compact_warn
 
-warnings.warn('This is warning', DeprecationWarning)
+warnings.warn('This is warning', RuntimeWarning)
 ```
 Output:
 ```commandline
-Warning in [test_warn.py] at line (6)
-   >> DeprecationWarning: This is warning
+Warning in [test_warn.py] at line (9)
+   >> RuntimeWarning: This is warning
 ```
 2. **super_compact_warn**
 ```python
@@ -137,6 +159,6 @@ warnings.warn('This is another warning', UserWarning)
 ```
 Output:
 ```commandline
-[test_warn]@10 >> UserWarning: This is another warning
+[test_warn]@13 >> UserWarning: This is another warning
 ```
 

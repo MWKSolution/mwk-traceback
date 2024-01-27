@@ -5,7 +5,6 @@ from mwk_traceback import super_compact_tb as sc_tb
 from test_main import main
 
 
-
 def test_chain():
     test_prints = (c_tb, sc_tb)
     for t in test_prints:

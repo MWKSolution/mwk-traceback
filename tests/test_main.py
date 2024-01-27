@@ -20,3 +20,12 @@ def func():
 def main():
 
     func()
+
+if __name__ == '__main__':
+    # from mwk_traceback import compact_tb
+    # compact_tb.activate()
+    # main()
+
+    from mwk_traceback import super_compact_tb
+    super_compact_tb.activate()
+    main()

@@ -1,4 +1,5 @@
 import sys
+import traceback
 from pathlib import Path
 from linecache import getline
 from typing import Dict, Generator, TextIO, Optional, Union
@@ -25,7 +26,7 @@ class CustomTraceback:
     """Subclass CustomTraceback and change these variables to get another way of printing exceptions"""
     _TB_FORMAT = '| Error in [{file}.py] in [{func}] at line ({line}) while executing "{code}"\n'  # format for traceback frames
     _EXC_FORMAT = '{traceback}   >> {type}: {exception}.\n'  # format for exception in chain
-    _EXC_HOOK_HEAD_TEXT = 'Error(s):'  # Header text for exception hook
+    _EXC_HOOK_HEAD_TEXT = '! Error(s):'  # Header text for exception hook
     _EXC_OUT = sys.stderr  # default output for exceptions
     _EXC_CHAIN = True  # True - chain exceptions, False - only last exception
     _EXC_REVERSE = False  # order of chained exceptions, True -> show like default python exception hook
@@ -142,15 +143,38 @@ class CustomTraceback:
         :param file: io object file
         :return: None
         """
-        # :todo: traceback.format_exc also???
         if isinstance(value, BaseException):
-            print(cls._format_exception(value, chain=chain, reverse=cls._EXC_REVERSE), file=file)
+            cls.print_exception(value, chain=chain, reverse=cls._EXC_REVERSE, file=file)
         else:
             if isinstance(exc, BaseException):
-                print(cls._format_exception(exc, chain=chain, reverse=cls._EXC_REVERSE), file=file)
+                cls.print_exception(exc, chain=chain, reverse=cls._EXC_REVERSE, file=file)
             else:
                 print('No exception is being handled.\n', file=file)
 
+    @classmethod
+    def traceback_format_exception_hook(cls,
+                                        exc: Union[ExceptionType, BaseException, None], /,
+                                        value: Optional[BaseException], tb='', limit=None,
+                                        file: TextIO = _EXC_OUT,
+                                        chain: bool = _EXC_CHAIN) -> str:
+        """
+        This method is to be used as traceback module format_exception method hook:
+            'traceback.format_exception = CustomTraceback.traceback_format_exception_hook'
+        :param exc: exception type
+        :param value: exception
+        :param tb: traceback - not used in this implementation
+        :param limit: not used - not used in this implementation
+        :param chain: chain exceptions or not
+        :param file: io object file
+        :return: None
+        """
+        if isinstance(value, BaseException):
+            return cls._format_exception(value, chain=chain, reverse=cls._EXC_REVERSE)
+        else:
+            if isinstance(exc, BaseException):
+                return cls._format_exception(exc, chain=chain, reverse=cls._EXC_REVERSE)
+            else:
+                return 'No exception is being handled.\n'
 
     @classmethod
     def exception_hook(cls,
@@ -166,3 +190,9 @@ class CustomTraceback:
         """
         print(cls._EXC_HOOK_HEAD_TEXT, file=cls._EXC_OUT)
         cls.print_exception(exc_value, chain=cls._EXC_CHAIN, reverse=cls._EXC_REVERSE, file=cls._EXC_OUT)
+
+    @classmethod
+    def activate(cls):
+        sys.excepthook = cls.exception_hook
+        traceback.print_exception = cls.traceback_print_exception_hook
+        traceback.format_exception = cls.traceback_format_exception_hook
