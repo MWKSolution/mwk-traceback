@@ -1,7 +1,7 @@
 from .custom_exc_tb import CustomTraceback
 from .custom_warn import CustomWarningFormatter
 
-__version__ = '2.0'
+__version__ = '2.1'
 
 __all__ = ('compact_tb', 'super_compact_tb', 'compact_warn', 'super_compact_warn',
            'CustomTraceback', 'CustomWarningFormatter')
